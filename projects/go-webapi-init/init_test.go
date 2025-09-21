@@ -8,7 +8,7 @@ import (
 
 func TestScaffoldIntoNamedFolder(t *testing.T) {
 	tmpDir := t.TempDir()
-	target := filepath.Join(tmpDir, "my-api")
+	target := filepath.Join(tmpDir, "foobar")
 
 	if err := scaffold(target); err != nil {
 		t.Fatalf("Scaffold failed: %v", err)

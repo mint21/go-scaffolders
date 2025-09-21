@@ -13,16 +13,6 @@ var structure = []string{
 	"pkg/model",
 }
 
-func resolveTarget(args []string) string {
-	if len(args) > 1 {
-		if args[1] == "." {
-			return "."
-		}
-		return args[1]
-	}
-	return "go-web-api"
-}
-
 func scaffold(root string) error {
 	for _, dir := range structure {
 		fullPath := filepath.Join(root, dir)
