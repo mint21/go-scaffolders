@@ -6,29 +6,42 @@ import (
 	"testing"
 )
 
-func TestInitializerCreatesStructure(t *testing.T) {
+func TestScaffoldIntoNamedFolder(t *testing.T) {
 	tmpDir := t.TempDir()
-	root := filepath.Join(tmpDir, "go-web-api")
+	target := filepath.Join(tmpDir, "my-api")
 
-	for _, dir := range structure {
-		fullPath := filepath.Join(root, dir)
-		if err := os.MkdirAll(fullPath, 0755); err != nil {
-			t.Fatalf("Failed to create directory: %v", err)
-		}
-		keepFile := filepath.Join(fullPath, ".keep")
-		if _, err := os.Create(keepFile); err != nil {
-			t.Fatalf("Failed to create .keep file: %v", err)
-		}
+	if err := scaffold(target); err != nil {
+		t.Fatalf("Scaffold failed: %v", err)
 	}
 
 	for _, dir := range structure {
-		fullPath := filepath.Join(root, dir)
+		fullPath := filepath.Join(target, dir)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("Expected directory not found: %s", fullPath)
+			t.Errorf("Missing directory: %s", fullPath)
 		}
-		keepFile := filepath.Join(fullPath, ".keep")
-		if _, err := os.Stat(keepFile); os.IsNotExist(err) {
-			t.Errorf("Expected .keep file not found: %s", keepFile)
+		if _, err := os.Stat(filepath.Join(fullPath, ".keep")); os.IsNotExist(err) {
+			t.Errorf("Missing .keep file in: %s", fullPath)
+		}
+	}
+}
+
+func TestScaffoldIntoCurrentFolder(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
+
+	if err := scaffold("."); err != nil {
+		t.Fatalf("Scaffold failed: %v", err)
+	}
+
+	for _, dir := range structure {
+		fullPath := filepath.Join(tmpDir, dir)
+		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+			t.Errorf("Missing directory: %s", fullPath)
+		}
+		if _, err := os.Stat(filepath.Join(fullPath, ".keep")); os.IsNotExist(err) {
+			t.Errorf("Missing .keep file in: %s", fullPath)
 		}
 	}
 }
