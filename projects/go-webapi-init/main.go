@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	if len(os.Args) != 1 {
+	if len(os.Args) != 2 {
 		fmt.Println("Usage: go-webapi-init <target-directory>")
 		fmt.Println("Pass '.' to scaffold into the current folder.")
 		os.Exit(1)
